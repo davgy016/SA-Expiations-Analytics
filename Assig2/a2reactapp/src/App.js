@@ -33,16 +33,7 @@ function App() {
                             <Link className="nav-link active" to="/Home">Home</Link>
                             <Link className="nav-link active" to="/About">About</Link>
                             <Link className="nav-link active" to="/Privacy">Privacy</Link>
-
-                        </div>
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <Link className="nav-link active" aria-current="page" to="/RegionList">Regions</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="CountryList/0">Countries</Link>
-                            </li>
-                        </ul>
+                        </div>                   
                     </div>
                     {user ? (
                         <>
