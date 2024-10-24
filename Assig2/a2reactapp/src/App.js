@@ -15,6 +15,8 @@ function App() {
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    //current Nav button retains active after page refreshing
     const isActive = (path) => location.pathname === path ? 'active' : '';
 
     function signOut() {
@@ -54,13 +56,13 @@ function App() {
                         <>
                             <div className=" row">
                                 <CgProfile className="icon" />
-                                    <button id="loginBtn" className="btn btn-active" onClick={signOut}>Sign in</button>
+                                    <button id="loginBtn" className="btn btn-active" onClick={signIn}>Sign in</button>
                             </div>
                         </>
                     )}
                 </div>
             </nav>
-            <Outlet context={{ setUser }} />
+            <Outlet context={{user, setUser }} />
         </div>
 
     );
