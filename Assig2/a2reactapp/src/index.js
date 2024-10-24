@@ -9,25 +9,26 @@ import About from './routes/About';
 import Home from './routes/Home';
 import Dashboard from './routes/Dashboard';
 import Login from './components/Login';
+import AuthRoute from './routes/AuthRoute';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+    <React.StrictMode>
         <BrowserRouter>
 
             <Routes>
                 <Route path="/" element={<App />}>
-                    <Route path="Home" element={<Home />} />
-                    <Route path="Privacy" element={<Privacy />} />
-                    <Route path="About" element={<About />} />            
-                    <Route path="Dashboard" element={<Dashboard />} /> 
-                    <Route path="" element={<Home />} /> {/**route when URL is localhost: [port] */}
-                    <Route path="*" element={<Home />} />{/**route matches anything */}
-                    <Route path="/Login" element={<Login />} />                   
+                    <Route path="Home" element={<AuthRoute><Home /> </AuthRoute>} />
+                    <Route path="Privacy" element={<AuthRoute><Privacy /></AuthRoute>} />
+                    <Route path="About" element={<AuthRoute><About /></AuthRoute>} />
+                    <Route path="Dashboard" element={<AuthRoute><Dashboard /></AuthRoute>} />
+                    <Route path="" element={<Login />} /> {/**route when URL is localhost: [port] */}
+                    <Route path="*" element={<Login />} />{/**route matches anything */}
+                    <Route path="Login" element={<Login />} />
                 </Route>
             </Routes>
         </BrowserRouter>
-  </React.StrictMode>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
