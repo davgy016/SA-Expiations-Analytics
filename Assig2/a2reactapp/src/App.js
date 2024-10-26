@@ -30,20 +30,21 @@ function App() {
 
     return (
         <div className="App">
-            <nav className="navbar navbar-expand-lg p-4">
+            <nav className="navbar  p-4">
                 <div className="container-fluid">
-                    <Link className="navbar-brand" to="/">Expiations SA</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="navbar-collapse" id="navbarNavAltMarkup">
+                    <Link className="navbar-brand" to="Home">Expiations SA</Link>
+                    <div className="navbar-collapse row collapse" id="navbarNavAltMarkup">
                         <div className="navbar-nav">
                             <Link className={`nav-link ${isActive("/Home")}`} to="/Home">Home</Link>
                             <Link className={`nav-link ${isActive("/About")}`} to="/About">About</Link>
                             <Link className={`nav-link ${isActive("/Privacy")}`} to="/Privacy">Privacy</Link>
                             <Link className={`nav-link ${isActive("/Dashboard")}`} to="/Dashboard">Dashboard</Link>
-                        </div>                   
+                        </div>
                     </div>
+                    <div className="d-flex align-items-center ms-auto">
                     {user ? (
                         <>
                             <div className="navbar-text">Hello, {user} </div>
@@ -54,16 +55,17 @@ function App() {
                         </>
                     ) : (
                         <>
-                            <div className=" row">
+                            <div className="row">
                                 <CgProfile className="icon" />
-                                    <button id="loginBtn" className="btn btn-active" onClick={signIn}>Sign in</button>
+                                <button id="loginBtn" className="btn btn-active" onClick={signIn}>Sign in</button>
                             </div>
                         </>
                     )}
+                    </div>
                 </div>
             </nav>
             {/*Share name of username globally with children*/}
-            <Outlet context={{user, setUser }} />
+            <Outlet context={{ user, setUser }} />
         </div>
 
     );

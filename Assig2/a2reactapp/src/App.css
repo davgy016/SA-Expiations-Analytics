@@ -15,12 +15,25 @@ body{
 }
 
 .navbar-brand {
+    position: absolute;
     font-weight: bold;
-    font-size:xx-large;
+    font-size: xx-large;
+    left: 85px;
+    top: 35px;
+}
+
+.navbar-toggler {
+    position: absolute;
+    left: 15px;
+    top: 45px;    
+}
+
+.navbar-collapse{
+    margin-top:80px;
 }
 
 .nav-link:hover {
-    background-color: lightsteelblue;
+    /*background-color: lightsteelblue;*/
     text-decoration: underline;
 }
 
@@ -42,7 +55,7 @@ body{
 #loginBtn {
     font-style: italic;
     font-weight: 600;
-    font-size: 20px
+    font-size: 20px;
 }
 
 
