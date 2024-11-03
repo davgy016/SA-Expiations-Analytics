@@ -2,7 +2,7 @@
 
 function SuburbList({ suburbs, onSelectSuburb }) {
 
-    const [selectedSuburb, setSelectedSuburb] = useState()
+    const [selectedSuburb, setSelectedSuburb] = useState();
 
     const selectSuburb = (e) => {
         const suburb = e.target.value;
