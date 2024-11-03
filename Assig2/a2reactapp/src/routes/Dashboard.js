@@ -4,6 +4,7 @@ import SuburbList from '../components/SuburbList';
 function Dashboard() {
     const [suburbs, setSuburbs] = useState([]);
     const [suburbDetails, setSuburbDetails] = useState([]);
+    const [selectedLocations, setSelectedLocations] = useState([]);
 
     useEffect(() => {
         fetch("http://localhost:5147/api/Get_ListCameraSuburbs")
@@ -25,6 +26,29 @@ function Dashboard() {
             setSuburbDetails([]);
         }
 
+    };
+   
+    
+
+    
+   /**
+    * Reference  for multiselected checkboxes to restric user select only 2 locations
+    * https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/
+    * https://altcademy.com/blog/how-to-select-only-one-checkbox-in-a-group-using-reactjs-component/
+    * https://stackoverflow.com/questions/65612615/limit-reactjs-input-element-of-type-checkbox-to-2-checked-while-using-usestate-a
+    */
+    const selectedLocationsChange = (index) => {
+        setSelectedLocations((prevCheckedLocations) => {
+            if (prevCheckedLocations.includes(index)) {
+                return prevCheckedLocations.filter((location) => location != index);
+            }
+            if (prevCheckedLocations.length < 2) {
+                return [...prevCheckedLocations, index];
+            } else {
+                alert("You can only select 2 locations")
+                return prevCheckedLocations;
+            }
+        });
     };
 
     return (
@@ -65,8 +89,8 @@ function Dashboard() {
                     </thead>
                     <tbody>
                         {suburbDetails.map((d, index) => (
-                            <tr key={index }>
-                                <th><input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" /></th>
+                            <tr key={index}>
+                                <th><input className="form-check-input" type="checkbox" value="" checked={selectedLocations.includes(index)} onChange={() => selectedLocationsChange(index)} disabled={!selectedLocations.includes(index) && selectedLocations >= 2} /></th>
                                 <td>{d.suburb}</td>
                                 <td>{d.cameraType1}</td>
                                 <td>{d.roadName}, {d.roadType}</td>
