@@ -16,7 +16,7 @@ function Dashboard() {
     return (
         <div>
             <h2>Dashboard</h2>
-            <div className="filters row justify-content-end p-4">
+            <div className="filters row justify-content-end p-4 mb-4">
                 <div className="col-2">
                     <input type="text" placeholder="Search by Speeding" className="searchSpeeding form-control">
                     </input>
@@ -33,7 +33,35 @@ function Dashboard() {
                 <div className="col-2">
                     <input type="date" className="dateTo form-control" />
                 </div>
-            </div>           
+            </div>
+
+            <div className="p-4">
+            <table className="table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Suburb</th>
+                        <th>Camera Type</th>
+                        <th>Rd Name</th>
+                        <th>Offences</th>
+                        <th>Rejected Expiations</th>
+                        <th>Compliance Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th><input className="form-check-input" type="checkbox" value="" id="flexCheckChecked"  /></th>
+                        <td>Adelaide</td>
+                        <td>Mobile camera</td>
+                        <td>Pitt St</td>
+                        <td>1000</td>
+                        <td>10</td>
+                        <td>Warning</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
         </div>
     );
 }
