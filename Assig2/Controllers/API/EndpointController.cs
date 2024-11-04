@@ -101,7 +101,7 @@ namespace Assig2.Controllers.API
         {
             var cameraContext = _context.CameraCodes;
             Debug.Assert(suburb != null, "Suburb was NULL here.");
-            var suburbs = await cameraContext.Where(i => i.Suburb.ToLower().StartsWith(suburb.ToLower()) || i.Suburb.ToLower().StartsWith(" "+suburb.ToLower())).Select(i => new { i.LocationId, i.CameraTypeCode, i.CameraTypeCodeNavigation.CameraType1, i.Suburb, i.RoadName, i.RoadType }).ToListAsync();
+            var suburbs = await cameraContext.Where(i => i.Suburb.ToLower().Contains(suburb.ToLower())).Select(i => new { i.LocationId, i.CameraTypeCode, i.CameraTypeCodeNavigation.CameraType1, i.Suburb, i.RoadName, i.RoadType }).ToListAsync();
 
             if (cameraIdsOnly)
             {
