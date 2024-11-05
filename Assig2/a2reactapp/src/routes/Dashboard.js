@@ -17,7 +17,7 @@ function Dashboard() {
     const [selectedCameraType, setSelectedCameraType] = useState("");
     const [loading, setLoading] = useState(false);
 
-
+    // fetch initial list of suburbs when component mounts
     useEffect(() => {
         fetch("http://localhost:5147/api/Get_ListCameraSuburbs")
             .then(response => response.json())
@@ -27,13 +27,18 @@ function Dashboard() {
             });
     }, [])
 
-
+    //fetch suburb details when suburb is selected
     useEffect(() => {
         if (selectedSuburb) {
             suburbSelect(selectedSuburb)
         }
     }, [selectedSuburb]);
 
+    /**
+     * if camera type is selected, then returns new filtered data
+     * If camera type is not selected returns sub details
+     * this allows to prevent re-rendering the page when camera type is changed and use existing suburbDetails
+     */    
     useEffect(() => {
         if (selectedCameraType) {
             const filteredData = suburbDetails.filter((c) => c.cameraTypeCode === selectedCameraType);
@@ -43,7 +48,7 @@ function Dashboard() {
         }
     }, [selectedCameraType, suburbDetails]);
 
-
+    //handle cammera type selection change
     const cameraTypeChange = (cameraType) => {
         setSelectedCameraType(cameraType);
     }
@@ -56,7 +61,10 @@ function Dashboard() {
      * https://rapidapi.com/guides/loading-state-react
      */
     const suburbSelect = async (suburb) => {
-        setLoading(true);
+        // Delay loading indicator popping
+        const delayIndicator = setTimeout(() => {
+            setLoading(true);
+        }, 400);
 
         try {
             //Fetch first suburb details 
@@ -79,8 +87,8 @@ function Dashboard() {
         } catch (err) {
             console.log(err);
         };
-
-
+        //reset delay function
+        clearTimeout(delayIndicator);
         setLoading(false);
     };
 
@@ -146,43 +154,45 @@ function Dashboard() {
                 <div><ThreeDot variant="bounce" color="#32cd32" speedPlus="0" size="medium" text="loading" textColor="" /></div>
             ) : (
 
-                <div className="p-4">
-                    <table className="table table-striped">
+                filteredSubDetails.length > 0 ? (
+                    <div className="p-4">
+                        <table className="table table-striped">
 
-                        <thead>
-                            <tr>
-                                <th style={{ width: '5%' }}>Select</th>
-                                <th style={{ width: '10%', textAlign: 'center', paddingLeft: '15px' }}>Location ID</th>
-                                <th style={{ paddingLeft: '30px' }}>Suburb</th>
-                                <th style={{ textAlign: 'center' }}>Camera Type</th>
-                                <th style={{ paddingLeft: '70px' }}>Rd Name</th>
-                                <th style={{width: '17%', textAlign: 'right' }}>Offences</th>
-                                <th style={{ textAlign: 'right' }}>Rej. Expiations</th>
-                                <th style={{ textAlign: 'center', paddingLeft: '35px' }}>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredSubDetails.map((d, index) => (
-                                <tr key={index}>
-                                    <td style={{ width: '5%', textAlign: 'center' }}>
-                                        <input className="form-check-input"
-                                            type="checkbox" value=""
-                                            checked={isSelected(index)}
-                                            onChange={() => selectedLocationsChange(index)}
-                                            disabled={!isSelected(index) && selectedLocations.length >= maxSelections} />
-                                    </td>
-                                    <td style={{ width: '10%', textAlign: 'center', paddingRight: '45px' }}>{d.locationId}</td>
-                                    <td style={{ width: '15%', paddingLeft: '30px' }}>{d.suburb}</td>
-                                    <td style={{ width: '15%', paddingLeft: '30px' }}>{d.cameraType1}</td>
-                                    <td style={{ width: '23%', paddingLeft: '40px' }}>{d.roadName}, {d.roadType}</td>
-                                    <td style={{ textAlign: 'center', paddingRight: '50px' }}>{d.expiationStats?.totalOffencesCount || "N/A"}</td>
-                                    <td style={{ textAlign: 'center', paddingRight:'35px'}}>10</td>
-                                    <td style={{ textAlign: 'center', paddingLeft: '35px' }}>Warning</td>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '5%' }}>Select</th>
+                                    <th style={{ width: '10%', textAlign: 'center', paddingLeft: '15px' }}>Location ID</th>
+                                    <th style={{ paddingLeft: '30px' }}>Suburb</th>
+                                    <th style={{ textAlign: 'center' }}>Camera Type</th>
+                                    <th style={{ paddingLeft: '70px' }}>Rd Name</th>
+                                    <th style={{ width: '17%', textAlign: 'right' }}>Offences</th>
+                                    <th style={{ textAlign: 'right' }}>Rej. Expiations</th>
+                                    <th style={{ textAlign: 'center', paddingLeft: '35px' }}>Status</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {filteredSubDetails.map((d, index) => (
+                                    <tr key={index}>
+                                        <td style={{ width: '5%', textAlign: 'center' }}>
+                                            <input className="form-check-input"
+                                                type="checkbox" value=""
+                                                checked={isSelected(index)}
+                                                onChange={() => selectedLocationsChange(index)}
+                                                disabled={!isSelected(index) && selectedLocations.length >= maxSelections} />
+                                        </td>
+                                        <td style={{ width: '10%', textAlign: 'center', paddingRight: '45px' }}>{d.locationId}</td>
+                                        <td style={{ width: '15%', paddingLeft: '30px' }}>{d.suburb}</td>
+                                        <td style={{ width: '15%', paddingLeft: '30px' }}>{d.cameraType1}</td>
+                                        <td style={{ width: '23%', paddingLeft: '40px' }}>{d.roadName}, {d.roadType}</td>
+                                        <td style={{ textAlign: 'center', paddingRight: '50px' }}>{d.expiationStats?.totalOffencesCount || "N/A"}</td>
+                                        <td style={{ textAlign: 'center', paddingRight: '35px' }}>10</td>
+                                        <td style={{ textAlign: 'center', paddingLeft: '35px' }}>Warning</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (<p>Location could not find</p>)
             )}
         </div>
     );
