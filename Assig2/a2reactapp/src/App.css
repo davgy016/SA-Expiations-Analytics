@@ -21,7 +21,10 @@ footer {
     background:lightblue;
     font-size:x-large;
     font-style:oblique;   
-    margin-bottom:50px;
+    margin-bottom:50px;    
+}
+.navbar-nav{
+    padding-top:80px;
 }
 
 .navbar-brand {
@@ -38,9 +41,6 @@ footer {
     top: 45px;    
 }
 
-.navbar-collapse{
-    margin-top:80px;
-}
 
 .nav-link:hover {
     /*background-color: lightsteelblue;*/
