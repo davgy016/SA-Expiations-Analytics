@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import SHA256 from 'crypto-js/sha256';
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import Footer from './components/Footer';
 
 /** After login set greeting with userName. To achieve this use useOutletContext(in Login page) to access data and outlet context to pass data to child
  * Ref: https://medium.com/@bobjunior542/react-router-6-advanced-routing-with-useoutlet-and-useoutletcontext-2cfca328b7ac
@@ -64,8 +65,11 @@ function App() {
                     </div>
                 </div>
             </nav>
+            <div className="main-content">
             {/*Share name of username globally with children*/}
-            <Outlet context={{ user, setUser }} />
+                <Outlet context={{ user, setUser }} />
+            </div>
+            <Footer/>
         </div>
 
     );

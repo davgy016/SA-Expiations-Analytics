@@ -1,11 +1,21 @@
 .App {
   text-align: center;
+  display:flex;
+  flex-direction: column;
+  min-height:100vh;
+}
+
+.main-content{
+    flex-grow:1;
 }
 
 body{
     background-color: aliceblue;
 }
 
+footer {
+    background-color: #2693b183;
+}   
 
 .navbar {
     background:lightblue;
@@ -84,7 +94,7 @@ body{
 
 .table tbody{
     display: block;
-    max-height:550px;
+    max-height:700px;
     overflow-y:auto;
 }
 
