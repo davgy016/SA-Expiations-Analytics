@@ -251,7 +251,12 @@ function Dashboard() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredSubDetails.map((d, index) => (
+                                    {filteredSubDetails.filter((d) => {
+                                        if (speedingDescription) {
+                                            return d.expiationStats?.totalOffencesCount !== 0;
+                                        }
+                                        return true;
+                                    }).map((d, index) => (
                                     <tr key={index}>
                                         <td style={{ width: '5%', textAlign: 'center' }}>
                                             <input className="form-check-input"
