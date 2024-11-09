@@ -167,7 +167,7 @@ function Dashboard() {
         }
     };
 
-    
+
     //handle Date To date change
     const dateToChange = (e) => {
         const newDateTo = e.target.value;
@@ -229,12 +229,15 @@ function Dashboard() {
                 </div>
             </div>
 
-            {/*Loading indicator animation*/}
+            {/*Loading indicator animation*/}          
+            {/*If suburb is not selected show show filters and message Select suburb*/}
             {loading ? (
                 <div><ThreeDot variant="bounce" color="#32cd32" speedPlus="0" size="medium" text="loading" textColor="" /></div>
+            ) : !selectedSuburb ? (
+                <p>Select Suburb</p>
             ) : (
-
-                filteredSubDetails.length > 0 && filteredSubDetails.filter((d) => !speedingDescription || d.expiationStats?.totalOffencesCount >0).length >0 ? (
+                //Table is displayed if there are locations after filtering otherwise shows message "The location could not find"
+                filteredSubDetails.length > 0 && filteredSubDetails.filter((d) => !speedingDescription || d.expiationStats?.totalOffencesCount > 0).length > 0 ? (
                     <div className="p-4">
                         <table className="table table-striped">
 
@@ -250,15 +253,15 @@ function Dashboard() {
                                     <th style={{ textAlign: 'center', paddingLeft: '35px' }}>Status</th>
                                 </tr>
                             </thead>
-                                <tbody>
-                                    {/*when speeding search is empty, shows all locations with 0 offences as well.
+                            <tbody>
+                                {/*when speeding search is empty, shows all locations with 0 offences as well.
                                         otherwise, based on the speeding search shows the locations the one has offences more than 0 */}
-                                    {filteredSubDetails.filter((d) => {
-                                        if (speedingDescription) {
-                                            return d.expiationStats?.totalOffencesCount !== 0;
-                                        }
-                                        return true;
-                                    }).map((d, index) => (
+                                {filteredSubDetails.filter((d) => {
+                                    if (speedingDescription) {
+                                        return d.expiationStats?.totalOffencesCount !== 0;
+                                    }
+                                    return true;
+                                }).map((d, index) => (
                                     <tr key={index}>
                                         <td style={{ width: '5%', textAlign: 'center' }}>
                                             <input className="form-check-input"
