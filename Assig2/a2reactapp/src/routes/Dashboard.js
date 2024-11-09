@@ -33,7 +33,7 @@ function Dashboard() {
 
     //fetch suburb details when suburb is selected
     useEffect(() => {
-        if (selectedSuburb) {
+        if (selectedSuburb && selectedSuburb !=="Default") {
             suburbSelect(selectedSuburb, selectedOffenceCode)
         }
     }, [selectedSuburb, selectedOffenceCode, dateFrom, dateTo]);
@@ -233,7 +233,7 @@ function Dashboard() {
             {/*If suburb is not selected show show filters and message Select suburb*/}
             {loading ? (
                 <div><ThreeDot variant="bounce" color="#32cd32" speedPlus="0" size="medium" text="loading" textColor="" /></div>
-            ) : !selectedSuburb ? (
+            ) : !selectedSuburb || selectedSuburb ==="Default" ? (
                 <p>Select Suburb</p>
             ) : (
                 //Table is displayed if there are locations after filtering otherwise shows message "The location could not find"

@@ -14,7 +14,7 @@ function SuburbList({ suburbs, onSelectSuburb }) {
         <div className="suburbList">
             <select className="form-select overflow-auto" value={selectedSuburb} onChange={selectSuburb}>
                 {/*enable to select suburb from suburblist */}
-                <option>Select Suburb</option>
+                <option value="Default">Select Suburb</option>
                 {suburbs.map((suburb, index) => (
                     <option key={index} value={suburb}>
                         {suburb}
