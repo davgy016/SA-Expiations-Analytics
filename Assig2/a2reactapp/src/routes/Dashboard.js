@@ -234,7 +234,7 @@ function Dashboard() {
                 <div><ThreeDot variant="bounce" color="#32cd32" speedPlus="0" size="medium" text="loading" textColor="" /></div>
             ) : (
 
-                filteredSubDetails.length > 0 ? (
+                filteredSubDetails.length > 0 && filteredSubDetails.filter((d) => !speedingDescription || d.expiationStats?.totalOffencesCount >0).length >0 ? (
                     <div className="p-4">
                         <table className="table table-striped">
 
@@ -250,7 +250,9 @@ function Dashboard() {
                                     <th style={{ textAlign: 'center', paddingLeft: '35px' }}>Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                                <tbody>
+                                    {/*when speeding search is empty, shows all locations with 0 offences as well.
+                                        otherwise, based on the speeding search shows the locations the one has offences more than 0 */}
                                     {filteredSubDetails.filter((d) => {
                                         if (speedingDescription) {
                                             return d.expiationStats?.totalOffencesCount !== 0;
