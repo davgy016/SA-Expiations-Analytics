@@ -68,13 +68,12 @@ function Dashboard() {
      */
     const suburbSelect = async (suburb, searchBySpeed) => {
 
+        // Delay loading indicator popping
+        setLoading(true);
+
         const startTime = dateFrom ? Math.floor(new Date(dateFrom).getTime() / 1000) : 0;
         const endTime = dateTo ? Math.floor(new Date(dateTo).getTime() / 1000) : 2147483647;
-        // Delay loading indicator popping
-        const delayIndicator = setTimeout(() => {
-            setLoading(true);
-        }, 400);
-
+       
         try {
             //Fetch first suburb details 
             const response1 = await fetch(`http://localhost:5147/api/Get_ListCamerasInSuburb?suburb=${suburb}&cameraIdsOnly=false`);
@@ -102,8 +101,7 @@ function Dashboard() {
         } catch (err) {
             console.log(err);
         };
-        //reset delay function
-        clearTimeout(delayIndicator);
+        //reset delay function       
         setLoading(false);
     };
 
