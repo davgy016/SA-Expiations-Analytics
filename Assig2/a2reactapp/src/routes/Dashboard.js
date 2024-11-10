@@ -79,19 +79,40 @@ function Dashboard() {
             const response1 = await fetch(`http://localhost:5147/api/Get_ListCamerasInSuburb?suburb=${suburb}&cameraIdsOnly=false`);
             const suburbsData = await response1.json();
 
+            //initialise empty object to store number of rej. expiations for each suburb
+            const rejectedExpiationsBySuburb = {};
+
             // Then fetch expiation Stats by the loc.ID and cam.typeCode,getting this details from first fetch 
             const expSubPromises = suburbsData.map(async (detail) => {
                 const { locationId, cameraTypeCode } = detail;
 
+                //Fetch expiations stats. by location  date and offence codes are optional
                 let apiUrl = `http://localhost:5147/api/Get_ExpiationStatsForLocationId?locationId=${locationId}&cameraTypeCode=${cameraTypeCode}&startTime=${startTime}&endTime=${endTime}`;
                 if (searchBySpeed) {
-                    apiUrl += `&offenceCodes=${searchBySpeed}`;
+                    apiUrl += `&offenceCodes=${searchBySpeed}`;                   
                 }
                 const response2 = await fetch(apiUrl);
                 const expiationStats = await response2.json();
 
+                //Fetch expiations by location. date and offence codes are optional. Purpose of this fetching is to count rejected expiations for each location
+                let expUrl = `http://localhost:5147/api/Get_ExpiationsForLocationId?locationId=${locationId}&cameraTypeCode=${cameraTypeCode}&startTime=${startTime}&endTime=${endTime}`;
+                if (searchBySpeed) {                   
+                    expUrl += `&offenceCodes=${searchBySpeed}`;
+                }
+
+                const response3 = await fetch(expUrl);
+                const expiationsData = await response3.json();
+
+                //array method 'filter' allows to create new array containing the expiations that satisfies condition: photoRejCode != null
+                const rejectedCount = expiationsData.filter(e => e.photoRejCode != null).length;
+                //count rej. expiations group by suburb name. it checks if suburb key and value exist in rejectedExpiationsBySuburb object, if not then initialises
+                if (!rejectedExpiationsBySuburb[suburb]) {
+                    rejectedExpiationsBySuburb[suburb] = 0;
+                }
+                rejectedExpiationsBySuburb[suburb] += rejectedCount;
+
                 // Merge fetched data from response1 and response2
-                return { ...detail, expiationStats };
+                return { ...detail, expiationStats, rejectedCount };
             });
 
             // wait for data fetches and then update sub with details with expiation stats 
@@ -259,7 +280,7 @@ function Dashboard() {
                                     <th style={{ textAlign: 'center' }}>Camera Type</th>
                                     <th style={{ paddingLeft: '70px' }}>Rd Name</th>
                                     <th style={{ width: '17%', textAlign: 'right' }}>Offences</th>
-                                    <th style={{ textAlign: 'right' }}>Speeding</th>
+                                    <th style={{ textAlign: 'right' }}>Rejected Expiations</th>
                                     <th style={{ textAlign: 'center', paddingLeft: '35px' }}>Status</th>
                                 </tr>
                             </thead>
@@ -285,7 +306,7 @@ function Dashboard() {
                                         <td style={{ width: '15%', paddingLeft: '30px' }}>{d.cameraType1}</td>
                                         <td style={{ width: '23%', paddingLeft: '40px' }}>{d.roadName}, {d.roadType}</td>
                                         <td style={{ textAlign: 'center', paddingRight: '50px' }}>{d.expiationStats?.totalOffencesCount || "N/A"}</td>
-                                        <td style={{ textAlign: 'center', paddingRight: '35px' }}>10</td>
+                                        <td style={{ textAlign: 'center', paddingRight: '35px' }}>{d.rejectedCount }</td>
                                         <td style={{ textAlign: 'center', paddingLeft: '35px' }}>Warning</td>
                                     </tr>
                                 ))}
