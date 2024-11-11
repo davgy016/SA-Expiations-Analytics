@@ -28,6 +28,11 @@ const Card = ({ locationId, suburbName, roadName, latitude, longitude, totalFee,
         }
     }, [latitude, longitude, suburbName, roadName]);
 
+    //Number formater
+    const formatNumber = (number) => {
+        return Number(number).toFixed(2);
+    }
+
     return (
         <div className="card mb-3" style={{ width: '500px', height: '600px' }}>
             <div className="row">
@@ -41,10 +46,10 @@ const Card = ({ locationId, suburbName, roadName, latitude, longitude, totalFee,
                     ></div>
                     <div className="card-body">
                         <h5 className="card-title">LocationID: {locationId}</h5>
-                        <p className="card-text">Total Fee: {totalFee}</p>
+                        <p className="card-text">Total Fee: ${totalFee}</p>
                         <p className="card-text">Total Demerits: {totalDemerits}</p>
-                        <p className="card-text">Avg. Daily Fee: {avgFeeDaily}</p>
-                        <p className="card-text">Avg. Daily Demerits: {avgDemeritsDaily}</p>
+                        <p className="card-text">Avg. Daily Fee: ${formatNumber(avgFeeDaily)}</p>
+                        <p className="card-text">Avg. Daily Demerits: {formatNumber(avgDemeritsDaily)}</p>
                     </div>
                 </div>
             </div>

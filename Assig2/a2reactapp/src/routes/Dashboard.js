@@ -227,7 +227,7 @@ function Dashboard() {
 
             //set parameters manually
             const selectedDetails = [{ locationId: 118, cameraTypeCode: "I/section", suburb: "Adelaide" },
-            { locationId: 170, cameraTypeCode: "Pac", suburb: "Clovelly Park" }];
+            { locationId: 170, cameraTypeCode: "PAC", suburb: "Clovelly Park" }];
 
             const filterSearchDetails = { selectedSuburb, selectedCameraType, speedingDescription,  dateFrom, dateTo };
             

@@ -1,6 +1,7 @@
 ﻿import Card from '../components/Card';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { ThreeDot } from 'react-loading-indicators';
 
 
 function Report({ }) {
@@ -8,7 +9,8 @@ function Report({ }) {
     const { selectedDetails, filterSearchDetails } = location.state || {
         selectedDetails: [], filterSearchDetails: {}
     };
-
+    const [loading, setLoading] = useState(false);
+    const [expiationStats, setExpiationStats] = useState([]);
     const filters = Object.entries(filterSearchDetails);
 
     const keyNames = {
@@ -17,7 +19,31 @@ function Report({ }) {
         dateFrom: "Start Date",
         dateTo: "End Date",
         speedingDescription: "Speeding Description"
-    };   
+    };
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            setLoading(true);
+            try {
+                const statsPromises = selectedDetails.map(async (detail) => {
+                    const { locationId, cameraTypeCode } = detail;
+                    let expUrl = `http://localhost:5147/api/Get_ExpiationStatsForLocationId?locationId=${locationId}&cameraTypeCode=${cameraTypeCode}&startTime=0&endTime=2147483647`;
+
+                    const response = await fetch(expUrl);
+                    const data = await response.json();
+
+                    return { ...detail, expiationStats: data };
+                });
+                const stats = await Promise.all(statsPromises);
+                setExpiationStats(stats);
+            } catch (error) {
+                console.error("Failed", error);
+            }
+        };
+        fetchStats();
+        setLoading(false);
+    }, [selectedDetails]);
+
 
     return (
         <div>
@@ -25,17 +51,23 @@ function Report({ }) {
                 Report
             </h2>
             <hr />
-            <div  style={{ textAlign: "justify" }}>
+            <div className="text-start ms-3">
                 <h4 style={{ display: "inline" }}>Filter Details: </h4>
                 {/*get applied filters from dashboard*/}
                 {filters.map(([key, value], index) => (
                     value ? (
                         <span key={index} style={{ marginLeft: "10px" }}>{keyNames[key] || key}: {value} </span>
-                    ):null
+                    ) : null
                 ))}
             </div>
+            {loading ? (
+                <div><ThreeDot variant="bounce" color="#32cd32" speedPlus="0" size="medium" text="loading" textColor="" /></div>
+            ) : (
+
+
+            
             <div className="row gap-3 p-4">
-                {selectedDetails.map((d, index) => (
+                {expiationStats.map((d, index) => (
 
                     <Card className="col-4"
                         key={index}
@@ -47,13 +79,25 @@ function Report({ }) {
                         //roadName={"Grote Street/West Terrace"}
                         //latitude={-34.929203}
                         //longitude={138.587725}
-                        totalFee={1}
-                        totalDemerits={2}
-                        avgDemeritsDaily={3}
+                        totalFee={d.expiationStats.totalFeeSum || "N/A"}
+                        totalDemerits={d.expiationStats.totalDemerits || "N/A"}
+                        avgFeeDaily={d.expiationStats.avgFeePerDay || "N/A"}
+                        avgDemeritsDaily={d.expiationStats.avgDemeritsPerDay || "N/A"}
                     />
                 ))}
-               
+                {/*<Card*/}
+                {/*    key={20}*/}
+                {/*    locationId={170}*/}
+                {/*    suburbName={"Clovelly Park"}*/}
+                {/*    roadName={"South Road"}*/}
+                {/*    latitude={-34.993378}*/}
+                {/*    longitude={138.574858}*/}
+                {/*    totalFee={1}*/}
+                {/*    totalDemerits={2}*/}
+                {/*    avgDemeritsDaily={3}*/}
+                {/*/>*/}
             </div>
+            )}
 
             <div className="container border rounded bg-light mb-4 ms-2" style={{ width: "1020px", textAlign: "justify" }}>
                 <div >
