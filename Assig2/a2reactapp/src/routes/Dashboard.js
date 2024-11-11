@@ -220,7 +220,19 @@ function Dashboard() {
 
     function generateReport() {
         if (selectedLocations.length == maxSelections) {
-            navigate("/Report")
+            //const selectedDetails = selectedLocations.map((i) => {
+            //    const { locationId, cameraTypeCode, suburb } = filteredSubDetails[i];
+            //    return { locationId, cameraTypeCode, suburb };
+            //});
+
+            //set parameters manually
+            const selectedDetails = [{ locationId: 118, cameraTypeCode: "I/section", suburb: "Adelaide" },
+            { locationId: 170, cameraTypeCode: "Pac", suburb: "Clovelly Park" }];
+
+            const filterSearchDetails = { selectedSuburb, selectedCameraType, speedingDescription,  dateFrom, dateTo };
+            
+
+            navigate("/Report", { state: { selectedDetails, filterSearchDetails } });
         } else {
             alert("Select 2 locations to generate the reprot")
         }

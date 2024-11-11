@@ -1,8 +1,23 @@
 ﻿import Card from '../components/Card';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 
 function Report({ }) {
+    const location = useLocation();
+    const { selectedDetails, filterSearchDetails } = location.state || {
+        selectedDetails: [], filterSearchDetails: {}
+    };
+
+    const filters = Object.entries(filterSearchDetails);
+
+    const keyNames = {
+        selectedSuburb: "Selected Suburb",
+        selectedCameraType: "Camera Type",
+        dateFrom: "Start Date",
+        dateTo: "End Date",
+        speedingDescription: "Speeding Description"
+    };   
 
     return (
         <div>
@@ -10,33 +25,37 @@ function Report({ }) {
                 Report
             </h2>
             <hr />
-            <p>It was made for Report testing</p>
-            <div className="row gap-3 p-4">
-                <Card className="col-4"
-                    key={10}
-                    locationId={118}
-                    suburbName={"Adelaide"}
-                    roadName={"Grote Street/West Terrace"}
-                    latitude={-34.929203}
-                    longitude={138.587725}
-                    totalFee={1}
-                    totalDemerits={2}
-                    avgDemeritsDaily={3}
-                />
-                <Card
-                    key={20}
-                    locationId={170}
-                    suburbName={"Clovelly Park"}
-                    roadName={"South Road"}
-                    latitude={-34.993378}
-                    longitude={138.574858}
-                    totalFee={1}
-                    totalDemerits={2}
-                    avgDemeritsDaily={3}
-                />
+            <div  style={{ textAlign: "justify" }}>
+                <h4 style={{ display: "inline" }}>Filter Details: </h4>
+                {/*get applied filters from dashboard*/}
+                {filters.map(([key, value], index) => (
+                    value ? (
+                        <span key={index} style={{ marginLeft: "10px" }}>{keyNames[key] || key}: {value} </span>
+                    ):null
+                ))}
             </div>
-           
-            <div className="container border rounded bg-light mb-4 ms-2" style={{width: "1020px", textAlign:"justify"} }>
+            <div className="row gap-3 p-4">
+                {selectedDetails.map((d, index) => (
+
+                    <Card className="col-4"
+                        key={index}
+                        locationId={d.locationId}
+                        suburbName={d.suburb}
+                        roadName={index === 0 ? "Grote Street/West Terrace" : "South Road"}
+                        latitude={index === 0 ? -34.929203 : -34.993378}
+                        longitude={index === 0 ? 138.587725 : 138.574858}
+                        //roadName={"Grote Street/West Terrace"}
+                        //latitude={-34.929203}
+                        //longitude={138.587725}
+                        totalFee={1}
+                        totalDemerits={2}
+                        avgDemeritsDaily={3}
+                    />
+                ))}
+               
+            </div>
+
+            <div className="container border rounded bg-light mb-4 ms-2" style={{ width: "1020px", textAlign: "justify" }}>
                 <div >
                     <p>The use of mobile phones while driving significantly increases the risk of traffic accidents. Mobile Phone Detection Cameras (MPDCs) are an effective tool to mitigate this risk. This report identifies two high-traffic locations in Adelaide for MPDC installation based on expiation data and safety considerations.
                     </p>
