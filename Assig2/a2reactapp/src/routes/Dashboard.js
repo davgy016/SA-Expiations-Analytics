@@ -128,15 +128,15 @@ function Dashboard() {
     };
 
 
-    //Reset seleccted checkboxes(locations) when selected suburb change
-    useEffect(() => {
-        setSelectedLocations([]);
-    }, [suburbDetails, selectedCameraType]);
+    ////Reset seleccted checkboxes(locations) when selected suburb change
+    //useEffect(() => {
+    //    setSelectedLocations([]);
+    //}, [suburbDetails, selectedCameraType]);
 
 
     //function returns boolean whether the index of location is found in selectedLocations array.
     //selectedLocations stores selected locations(checkbox) by user
-    const isSelected = (index) => selectedLocations.includes(index);
+    const isSelected = (locationId, cameraTypeCode) => selectedLocations.some(location=> location.locationId==locationId && location.cameraTypeCode ==cameraTypeCode);
 
     /**
      * Reference  for multiselected checkboxes to restrict user select only 2 locations
@@ -144,13 +144,13 @@ function Dashboard() {
      * https://altcademy.com/blog/how-to-select-only-one-checkbox-in-a-group-using-reactjs-component/
      * https://stackoverflow.com/questions/65612615/limit-reactjs-input-element-of-type-checkbox-to-2-checked-while-using-usestate-a
      */
-    const selectedLocationsChange = (index) => {
+    const selectedLocationsChange = (locationId, cameraTypeCode) => {
         setSelectedLocations((prevCheckedLocations) => {
-            if (isSelected(index)) {
-                return prevCheckedLocations.filter((location) => location !== index);
+            if (isSelected(locationId, cameraTypeCode)) {
+                return prevCheckedLocations.filter((loc) => !(loc.locationId == locationId && loc.cameraTypeCode == cameraTypeCode));
             }
             if (prevCheckedLocations.length < maxSelections) {
-                return [...prevCheckedLocations, index];
+                return [...prevCheckedLocations, {locationId, cameraTypeCode} ];
             } else {
                 alert(`You can only select ${maxSelections} locations`)
                 return prevCheckedLocations;
@@ -276,14 +276,15 @@ function Dashboard() {
                     <button type="button" onClick={generateReport} className="form-control">View Report</button>
                 </div>
 
-                {selectedLocations.map((i) => {
-                    const detail = filteredSubDetails[i];
+                {selectedLocations.map(({locationId, cameraTypeCode }) => {
+                    const detail = filteredSubDetails.find((d) => d.locationId == locationId && d.cameraTypeCode == cameraTypeCode);
+                    if (!detail) return null;
                     return (
-                        <div key={i} className="d-flex align-items-center gap-1" style={{ backgroundColor: "white", borderRadius: "10px", marginTop:"7px"}} >
-                            <button type="button" key={i} className="btn-close" aria-label="Close" style={{ backgroundColor: "white"}}
+                        <div key={`${locationId}-${cameraTypeCode}`} className="d-flex align-items-center gap-1" style={{ backgroundColor: "white", borderRadius: "10px", marginTop:"7px"}} >
+                            <button type="button"  className="btn-close" aria-label="Close" style={{ backgroundColor: "gray"}}
                                 //remove location from selected locations
                                 onClick={() => {
-                                    setSelectedLocations((prevLocations) => prevLocations.filter((location) => location != i));
+                                    setSelectedLocations((prevLocations) => prevLocations.filter((l) => l.locationId != locationId || l.cameraTypeCode!=cameraTypeCode));
                                 }}
                             ></button>
                             <span className="me-2">
@@ -332,9 +333,9 @@ function Dashboard() {
                                         <td style={{ width: '5%', textAlign: 'center' }}>
                                             <input className="form-check-input"
                                                 type="checkbox" value=""
-                                                checked={isSelected(index)}
-                                                onChange={() => selectedLocationsChange(index)}
-                                                disabled={!isSelected(index) && selectedLocations.length >= maxSelections}
+                                                checked={isSelected(d.locationId, d.cameraTypeCode)}
+                                                onChange={() => selectedLocationsChange(d.locationId, d.cameraTypeCode)}
+                                                disabled={!isSelected(d.locationId, d.cameraTypeCode) && selectedLocations.length >= maxSelections}
                                             />
                                         </td>
                                         <td style={{ width: '10%', textAlign: 'center', paddingRight: '45px' }}>{d.locationId}</td>
