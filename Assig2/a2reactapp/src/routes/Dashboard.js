@@ -140,17 +140,18 @@ function Dashboard() {
 
     /**
      * Reference  for multiselected checkboxes to restrict user select only 2 locations
+     * Add and remove locations
      * https://www.freecodecamp.org/news/how-to-work-with-multiple-checkboxes-in-react/
      * https://altcademy.com/blog/how-to-select-only-one-checkbox-in-a-group-using-reactjs-component/
      * https://stackoverflow.com/questions/65612615/limit-reactjs-input-element-of-type-checkbox-to-2-checked-while-using-usestate-a
      */
-    const selectedLocationsChange = (locationId, cameraTypeCode) => {
+    const selectedLocationsChange = (locationId, cameraTypeCode, suburb, roadName) => {
         setSelectedLocations((prevCheckedLocations) => {
             if (isSelected(locationId, cameraTypeCode)) {
                 return prevCheckedLocations.filter((loc) => !(loc.locationId == locationId && loc.cameraTypeCode == cameraTypeCode));
             }
             if (prevCheckedLocations.length < maxSelections) {
-                return [...prevCheckedLocations, {locationId, cameraTypeCode} ];
+                return [...prevCheckedLocations, { locationId, cameraTypeCode, suburb, roadName } ];
             } else {
                 alert(`You can only select ${maxSelections} locations`)
                 return prevCheckedLocations;
@@ -276,9 +277,8 @@ function Dashboard() {
                     <button type="button" onClick={generateReport} className="form-control">View Report</button>
                 </div>
 
-                {selectedLocations.map(({locationId, cameraTypeCode }) => {
-                    const detail = filteredSubDetails.find((d) => d.locationId == locationId && d.cameraTypeCode == cameraTypeCode);
-                    if (!detail) return null;
+                {selectedLocations.map(({ locationId, cameraTypeCode, suburb, roadName }) => {
+                    
                     return (
                         <div key={`${locationId}-${cameraTypeCode}`} className="d-flex align-items-center gap-1" style={{ backgroundColor: "white", borderRadius: "10px", marginTop:"7px"}} >
                             <button type="button"  className="btn-close" aria-label="Close" style={{ backgroundColor: "gray"}}
@@ -288,7 +288,7 @@ function Dashboard() {
                                 }}
                             ></button>
                             <span className="me-2">
-                                ID-{detail.locationId}: {detail.suburb}, {detail.roadName}
+                                ID-{locationId}: {suburb}, {roadName}
                             </span>
                         </div>
                     );
@@ -334,7 +334,7 @@ function Dashboard() {
                                             <input className="form-check-input"
                                                 type="checkbox" value=""
                                                 checked={isSelected(d.locationId, d.cameraTypeCode)}
-                                                onChange={() => selectedLocationsChange(d.locationId, d.cameraTypeCode)}
+                                                onChange={() => selectedLocationsChange(d.locationId, d.cameraTypeCode, d.suburb, d.roadName)}
                                                 disabled={!isSelected(d.locationId, d.cameraTypeCode) && selectedLocations.length >= maxSelections}
                                             />
                                         </td>
